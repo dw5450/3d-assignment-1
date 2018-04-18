@@ -174,8 +174,11 @@ XMVECTOR RandomUnitVectorOnSphere()
 XMFLOAT3 CExplosiveObject::m_pxmf3SphereVectors[EXPLOSION_DEBRISES];
 CMesh *CExplosiveObject::m_pExplosionMesh = NULL;
 
+<<<<<<< HEAD
 
 //»ý¼º, ¼Ò¸ê
+=======
+>>>>>>> parent of e2fa26e... gameobject code arrangement
 CExplosiveObject::CExplosiveObject()
 {
 }
