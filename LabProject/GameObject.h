@@ -108,5 +108,5 @@ public:
 	virtual ~CWallsObject();
 
 public:
-	XMFLOAT4					m_pxmf4WallPlanes[6];
+	XMFLOAT4					m_pxmf4WallPlanes[6];				//¸é¼³Á¤
 };
