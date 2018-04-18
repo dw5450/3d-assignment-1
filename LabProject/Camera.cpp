@@ -25,6 +25,7 @@ CCamera::~CCamera()
 {
 }
 
+//변환 행렬 설정
 void CCamera::GenerateViewMatrix()
 {
 	m_xmf3Look = Vector3::Normalize(m_xmf3Look);
@@ -40,6 +41,21 @@ void CCamera::GenerateViewMatrix()
 	m_xmf4x4ViewProject = Matrix4x4::Multiply(m_xmf4x4View, m_xmf4x4Projection);
 }
 
+void CCamera::GenerateProjectionMatrix(float fNearPlaneDistance, float fFarPlaneDistance, float fFOVAngle)
+{
+	float fAspectRatio = (float(m_Viewport.m_nWidth) / float(m_Viewport.m_nHeight));
+	m_xmf4x4Projection = Matrix4x4::PerspectiveFovLH(fFOVAngle, fAspectRatio, fNearPlaneDistance, fFarPlaneDistance);
+}
+
+void CCamera::SetViewport(int xTopLeft, int yTopLeft, int nWidth, int nHeight)
+{
+	m_Viewport.m_xStart = xTopLeft;
+	m_Viewport.m_yStart = yTopLeft;
+	m_Viewport.m_nWidth = nWidth;
+	m_Viewport.m_nHeight = nHeight;
+}
+
+//바라보는 방향 설정
 void CCamera::SetLookAt(XMFLOAT3& xmf3Position, XMFLOAT3& xmf3LookAt, XMFLOAT3& xmf3Up)
 {
 	m_xmf3Position = xmf3Position;
@@ -57,20 +73,7 @@ void CCamera::SetLookAt(XMFLOAT3& xmf3LookAt, XMFLOAT3& xmf3Up)
 	m_xmf3Look = Vector3::Normalize(XMFLOAT3(xmf4x4View._13, xmf4x4View._23, xmf4x4View._33));
 }
 
-void CCamera::SetViewport(int xTopLeft, int yTopLeft, int nWidth, int nHeight)
-{
-	m_Viewport.m_xStart = xTopLeft;
-	m_Viewport.m_yStart = yTopLeft;
-	m_Viewport.m_nWidth = nWidth;
-	m_Viewport.m_nHeight = nHeight;
-}
-
-void CCamera::GenerateProjectionMatrix(float fNearPlaneDistance, float fFarPlaneDistance, float fFOVAngle)
-{
-	float fAspectRatio = (float(m_Viewport.m_nWidth) / float(m_Viewport.m_nHeight));
-	m_xmf4x4Projection = Matrix4x4::PerspectiveFovLH(fFOVAngle, fAspectRatio, fNearPlaneDistance, fFarPlaneDistance);
-}
-
+//좌표값 변경 설정
 void CCamera::Move(XMFLOAT3& xmf3Shift)
 {
 	m_xmf3Position = Vector3::Add(m_xmf3Position, xmf3Shift);
