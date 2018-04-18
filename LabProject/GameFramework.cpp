@@ -47,7 +47,7 @@ void CGameFramework::BuildObjects()
 	pAirplaneMesh->SetOOBB(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(3.0f, 3.0f, 0.5f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
 
 	m_pPlayer = new CPlayer();
-	m_pPlayer->SetPosition(0.0f, 0.0f, -30.0f);
+	m_pPlayer->SetPosition(0.0f, 0.0f, 0.0f);
 	m_pPlayer->SetMesh(pAirplaneMesh);
 	m_pPlayer->SetColor(RGB(0, 0, 255));
 	m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));
@@ -249,6 +249,7 @@ void CGameFramework::FrameAdvance()
 
 	//화면에 오브젝트들을 그립니다.
 	m_pScene->Render(m_hDCFrameBuffer, m_pPlayer->m_pCamera);
+	m_pPlayer->Render(m_hDCFrameBuffer, m_pPlayer->m_pCamera);
 
 	PresentFrameBuffer();				//버퍼링을 적용 시킵니다.
 

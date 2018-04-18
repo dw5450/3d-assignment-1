@@ -188,6 +188,8 @@ void CExplosiveObject::PrepareExplosion()
 	m_pExplosionMesh = new CCubeMesh(0.5f, 0.5f, 0.5f);
 }
 
+
+//积己, 家戈
 CExplosiveObject::CExplosiveObject()
 {
 }
@@ -196,6 +198,8 @@ CExplosiveObject::~CExplosiveObject()
 {
 }
 
+
+//青悼 窃荐
 void CExplosiveObject::Animate(float fElapsedTime)
 {
 	if (m_bBlowingUp)

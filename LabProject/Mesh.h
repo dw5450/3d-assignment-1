@@ -3,7 +3,9 @@
 #include "Camera.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-//
+//// 매쉬들을 정의 하는 헤더입니다.
+
+//점
 class CVertex
 {
 public:
@@ -13,6 +15,7 @@ public:
 	XMFLOAT3					m_xmf3Position;
 };
 
+//면
 class CPolygon
 {
 public:
@@ -25,6 +28,7 @@ public:
 	void SetVertex(int nIndex, CVertex& vertex);
 };
 
+//매쉬
 class CMesh
 {
 public:
@@ -51,6 +55,8 @@ public:
 	void SetOOBB(XMFLOAT3& xmCenter, XMFLOAT3& xmExtents, XMFLOAT4& xmOrientation) { m_xmOOBB = BoundingOrientedBox(xmCenter, xmExtents, xmOrientation); }
 };
 
+
+//매쉬:큐브
 class CCubeMesh : public CMesh
 {
 public:
@@ -58,6 +64,7 @@ public:
 	virtual ~CCubeMesh();
 };
 
+//매쉬 : 벽
 class CWallMesh : public CMesh
 {
 public:
@@ -65,6 +72,7 @@ public:
 	virtual ~CWallMesh();
 };
 
+//매쉬 : 비행기
 class CAirplaneMesh : public CMesh
 {
 public:

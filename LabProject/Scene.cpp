@@ -11,21 +11,20 @@ CScene::CScene()
 
 CScene::~CScene()
 {
+	if (m_pPlayer) delete m_pPlayer;
+	if (m_ppObjects) {
+		for( int i=0; i< m_nObjects; i++)
+		delete m_ppObjects[i];
+	}
+	if (m_pWallsObject) delete m_pWallsObject;
 }
 
-void CScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
-{
-}
 
-void CScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
-{
-}
 
 //오브젝트들을 생성합니다.
 void CScene::BuildObjects()
 {
 	CExplosiveObject::PrepareExplosion();
-
 	//벽설정
 	float fHalfWidth = 45.0f, fHalfHeight = 45.0f, fHalfDepth = 500.0f;									//1.0f 당 1m
 	CWallMesh *pWallCubeMesh = new CWallMesh(fHalfWidth * 2.0f, fHalfHeight * 2.0f, fHalfDepth * 2.0f, 20);
@@ -219,7 +218,6 @@ void CScene::Animate(float fElapsedTime)
 
 	ResponEnemy(fElapsedTime);
 
-	
 	for (int i = 0; i < m_nObjects; i++) {
 		if (m_ppObjects[i]->m_bActive)
 			m_ppObjects[i]->SetMovingDirection(Vector3::Add(Vector3::ScalarProduct(m_ppObjects[i]->GetPosition(), -1), m_pPlayer->GetPosition()));
@@ -251,4 +249,12 @@ void CScene::ResponEnemy(float fElapsedTime)
 
 		}
 	}
+}
+
+void CScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
+{
+}
+
+void CScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
+{
 }

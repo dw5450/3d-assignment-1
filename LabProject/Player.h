@@ -11,14 +11,12 @@ public:
 public:
 	float	fElapseTime = 0.0f;								//경과 시간.
 
-
-
 };
 
 
 class CPlayer : public CGameObject
 {
-public:
+public:	//생성 소멸자
 	CPlayer();
 	virtual ~CPlayer();
 
@@ -41,18 +39,19 @@ public:
 	float						m_fBulletCoolTime = -1.0f;
 	CBullet						*m_pBullets[MAXBULLETNUM];
 
+public: //설정
 	void SetPosition(float x, float y, float z);
-	void Move(DWORD dwDirection, float fDistance);
-	void Move(XMFLOAT3& xmf3Shift, bool bUpdateVelocity);
-	void Move(float x, float y, float z);
-	void Rotate(float fPitch = 0.0f, float fYaw = 0.0f, float fRoll = 0.0f);
+	void SetPosition(XMFLOAT3 &xmf);
 	void SetCameraOffset(XMFLOAT3& xmf3CameraOffset);
-	
-	void Update(float fTimeElapsed=0.016f);
 
-	void ShotBullet(float fTimeElapsed);
-
-	virtual void Animate(float fElapsedTime);
-	virtual void Render(HDC hDCFrameBuffer, CCamera *pCamera);
+public://행동
+	void Move(DWORD dwDirection, float fDistance);						//이동
+	void Move(XMFLOAT3& xmf3Shift, bool bUpdateVelocity);				//이동
+	void Move(float x, float y, float z);								//이동
+	void Rotate(float fPitch = 0.0f, float fYaw = 0.0f, float fRoll = 0.0f);	//회전
+	void Update(float fTimeElapsed=0.016f);								//업데이트
+	void ShotBullet(float fTimeElapsed);								//총을 쏘다
+	virtual void Animate(float fElapsedTime);							//변경점 적용
+	virtual void Render(HDC hDCFrameBuffer, CCamera *pCamera);			//화면에 그림
 };
 

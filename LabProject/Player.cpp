@@ -12,22 +12,25 @@ CBullet::~CBullet()
 
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-//
+//생성 소멸
 CPlayer::CPlayer()
 {
+	//카메라 설정
 	m_pCamera = new CCamera();
 	m_pCamera->GenerateProjectionMatrix(1.01f, 5000.0f, 60.0f);
 	m_pCamera->SetViewport(0, 0, CLIENT_WIDTH, CLIENT_HEIGHT);
 
-	m_xmf3Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	CGameObject::SetPosition(m_xmf3Position);
+	//플레이어 포지션 설정
+	SetPosition(0, 0, 0);
 	m_xmf3Right = XMFLOAT3(1.0f, 0.0f, 0.0f);
 	m_xmf3Up = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	m_xmf3Look = XMFLOAT3(0.0f, 0.0f, 1.0f);
-
-	m_xmf3CameraOffset = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	//속도
 	m_xmf3Velocity = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	
+	m_xmf3CameraOffset = XMFLOAT3(0.0f, 0.0f, 0.0f);
 
+	//총알 설정
 	CCubeMesh *pObjectCubeMesh = new CCubeMesh(1.0f, 1.0f, 1.0f);
 	for (int i = 0; i < MAXBULLETNUM; i++) {
 		m_pBullets[i] = new CBullet();
@@ -38,21 +41,32 @@ CPlayer::CPlayer()
 		m_pBullets[i]->SetMovingSpeed(BULLETSPEED);
 		m_pBullets[i]->SetRotationSpeed(600.0f);
 	}
-
-
-
 }
 
 CPlayer::~CPlayer()
 {
 	if (m_pCamera) delete m_pCamera;
-}
 
+	if (m_pBullets) {
+		for (int i = 0; i < BULLET_NUM; i++)
+			delete m_pBullets[i];
+	}
+
+}
+//설정
+// 포지션 설정.
 void CPlayer::SetPosition(float x, float y, float z)
 {
 	m_xmf3Position = XMFLOAT3(x, y, z);
 
 	CGameObject::SetPosition(x, y, z);
+}
+
+void CPlayer::SetPosition(XMFLOAT3 &xmf)
+{
+	m_xmf3Position = xmf;
+
+	CGameObject::SetPosition(xmf);
 }
 
 void CPlayer::SetCameraOffset(XMFLOAT3& xmf3CameraOffset)
@@ -62,18 +76,7 @@ void CPlayer::SetCameraOffset(XMFLOAT3& xmf3CameraOffset)
 	m_pCamera->GenerateViewMatrix();
 }
 
-//void CPlayer::Animate(float fElapsedTime)
-//{
-//	CGameObject::Animate(fElapsedTime);
-//	ShotBullet(fElapsedTime);
-//
-//	for (int i = 0; i < MAXBULLETNUM; i++) {
-//		m_pBullets[i]->Animate(fElapsedTime);
-//	}
-//
-//
-//}
-
+//행동
 void CPlayer::Move(DWORD dwDirection, float elapse_time)
 {
 
@@ -100,7 +103,7 @@ void CPlayer::Move(XMFLOAT3& xmf3Shift, bool bUpdateVelocity)
 	}
 	else
 	{
-		m_xmf3Position = Vector3::Add(xmf3Shift, m_xmf3Position);
+		SetPosition(Vector3::Add(xmf3Shift, m_xmf3Position));
 		m_xmf3MovingDirection = Vector3::Normalize(xmf3Shift);
 		m_pCamera->Move(xmf3Shift);
 	}
@@ -189,6 +192,11 @@ void CPlayer::ShotBullet(float fTimeElapsed)
 void CPlayer::Animate(float fElapsedTime)
 {
 	CGameObject::Animate(fElapsedTime);
+	ShotBullet(fElapsedTime);
+
+	for (int i = 0; i < MAXBULLETNUM; i++) {
+		m_pBullets[i]->Animate(fElapsedTime);
+	}
 }
 
 void CPlayer::Render(HDC hDCFrameBuffer, CCamera *pCamera)
@@ -200,7 +208,8 @@ void CPlayer::Render(HDC hDCFrameBuffer, CCamera *pCamera)
 
 	m_xmf4x4World = Matrix4x4::Multiply(XMMatrixRotationRollPitchYaw(XMConvertToRadians(90.0f), 0.0f, 0.0f), m_xmf4x4World);
 	
-	CGameObject::Render(hDCFrameBuffer, pCamera);
+	CGameObject::Render(hDCFrameBuffer,pCamera);
+	
 	for (int i = 0; i < MAXBULLETNUM; i++) {
 		m_pBullets[i]->Render(hDCFrameBuffer, pCamera);
 	}
