@@ -16,8 +16,8 @@ private:
 	HINSTANCE					m_hInstance = NULL;
 	HWND						m_hWnd = NULL;
 
-	bool						m_bActive = true;					//어디에 쓰이는지 모르겟음
-	void SetActive(bool bActive) { m_bActive = bActive; }
+	bool						m_bActive = true;						
+
 
 	CGameTimer					m_GameTimer;							//시간
 
@@ -42,6 +42,7 @@ public:			 //랜더링
 	void PresentFrameBuffer();				//버퍼에 그림
 
 public:			// 입력.
+	void SetActive(bool bActive) { m_bActive = bActive; }					//실행 할지 않 할지 설정
 	void ProcessInput();							//프로그램 입력 처리
 	void OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);		//마우스의 입력 
 	void OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);		//키보드의 입력 
