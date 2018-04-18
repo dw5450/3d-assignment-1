@@ -1,2 +1,8 @@
-﻿  Player.cpp
+﻿  Camera.cpp
+  GameFramework.cpp
+  GameObject.cpp
+  LabProject.cpp
+  Player.cpp
+  Scene.cpp
+  코드를 생성하고 있습니다...
   LabProject.vcxproj -> C:\Users\wdw\Desktop\3d-assignment-1\x64\Debug\LabProject.exe
