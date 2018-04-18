@@ -26,7 +26,6 @@ public:	//생성 소멸자
 	XMFLOAT3					m_xmf3Look;
 
 	XMFLOAT3					m_xmf3CameraOffset;
-	XMFLOAT3					m_xmf3Velocity;
 	float						m_fFriction = 125.0f;
 
 	float           			m_fPitch = 0.0f;
@@ -46,12 +45,12 @@ public: //설정
 
 public://행동
 	void Move(DWORD dwDirection, float fDistance);						//이동
-	void Move(XMFLOAT3& xmf3Shift, bool bUpdateVelocity);				//이동
+	void Move(XMFLOAT3& xmf3Shift);				//이동
 	void Move(float x, float y, float z);								//이동
 	void Rotate(float fPitch = 0.0f, float fYaw = 0.0f, float fRoll = 0.0f);	//회전
 	void Update(float fTimeElapsed=0.016f);								//업데이트
 	void ShotBullet(float fTimeElapsed);								//총을 쏘다
-	virtual void Animate(float fElapsedTime);							//변경점 적용
+	virtual void Animate(float fElapsedTime);
 	virtual void Render(HDC hDCFrameBuffer, CCamera *pCamera);			//화면에 그림
 };
 

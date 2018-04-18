@@ -13,6 +13,7 @@ CBullet::~CBullet()
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //생성 소멸
+
 CPlayer::CPlayer()
 {
 	//카메라 설정
@@ -25,9 +26,7 @@ CPlayer::CPlayer()
 	m_xmf3Right = XMFLOAT3(1.0f, 0.0f, 0.0f);
 	m_xmf3Up = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	m_xmf3Look = XMFLOAT3(0.0f, 0.0f, 1.0f);
-	//속도
-	m_xmf3Velocity = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	
+
 	m_xmf3CameraOffset = XMFLOAT3(0.0f, 0.0f, 0.0f);
 
 	//총알 설정
@@ -79,39 +78,30 @@ void CPlayer::SetCameraOffset(XMFLOAT3& xmf3CameraOffset)
 //행동
 void CPlayer::Move(DWORD dwDirection, float elapse_time)
 {
-
 	float fDistance = m_fMovingSpeed * elapse_time;
 	if (dwDirection)
 	{
-		XMFLOAT3 xmf3Shift = XMFLOAT3(0, 0, 0);
-		if (dwDirection & DIR_FORWARD) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Look, fDistance);
-		if (dwDirection & DIR_BACKWARD) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Look, -fDistance);
-		if (dwDirection & DIR_RIGHT) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Right, fDistance);
-		if (dwDirection & DIR_LEFT) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Right, -fDistance);
-		if (dwDirection & DIR_UP) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Up, fDistance);
-		if (dwDirection & DIR_DOWN) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Up, -fDistance);
-
-		Move(xmf3Shift, true);
+		if (dwDirection & DIR_FORWARD) SetMovingDirection(m_xmf3Look);
+		if (dwDirection & DIR_BACKWARD) SetMovingDirection(Vector3::ScalarProduct(m_xmf3Look, -1));
+		if (dwDirection & DIR_RIGHT) SetMovingDirection(m_xmf3Right);
+		if (dwDirection & DIR_LEFT) SetMovingDirection(Vector3::ScalarProduct(m_xmf3Right, -1));
+		if (dwDirection & DIR_UP) SetMovingDirection(m_xmf3Up);
+		if (dwDirection & DIR_DOWN) SetMovingDirection(Vector3::ScalarProduct(m_xmf3Up, -1));
 	}
+	//else
+		//SetMovingDirection(XMFLOAT3(0.0f, 0.0f, 0.0f));
+
 }
 
-void CPlayer::Move(XMFLOAT3& xmf3Shift, bool bUpdateVelocity)
+void CPlayer::Move(XMFLOAT3& xmf3Shift)
 {
-	if (bUpdateVelocity)
-	{
-		m_xmf3Velocity = Vector3::Add(m_xmf3Velocity, xmf3Shift);
-	}
-	else
-	{
-		SetPosition(Vector3::Add(xmf3Shift, m_xmf3Position));
-		m_xmf3MovingDirection = Vector3::Normalize(xmf3Shift);
-		m_pCamera->Move(xmf3Shift);
-	}
+	SetPosition(Vector3::Add(xmf3Shift, m_xmf3Position));
+	m_pCamera->Move(xmf3Shift);
 }
 
 void CPlayer::Move(float x, float y, float z)
 {
-	Move(XMFLOAT3(x, y, z), false);
+	Move(XMFLOAT3(x, y, z));
 }
 
 void CPlayer::Rotate(float fPitch, float fYaw, float fRoll)
@@ -143,16 +133,8 @@ void CPlayer::Rotate(float fPitch, float fYaw, float fRoll)
 
 void CPlayer::Update(float fTimeElapsed)
 {
-	Move(m_xmf3Velocity, false);
-
 	m_pCamera->Update(this, m_xmf3Position, fTimeElapsed);
 	m_pCamera->GenerateViewMatrix();
-
-	XMFLOAT3 xmf3Deceleration = Vector3::Normalize(Vector3::ScalarProduct(m_xmf3Velocity, -1.0f));
-	float fLength = Vector3::Length(m_xmf3Velocity);
-	float fDeceleration = m_fFriction * fTimeElapsed;
-	if (fDeceleration > fLength) fDeceleration = fLength;
-	m_xmf3Velocity = Vector3::Add(m_xmf3Velocity, xmf3Deceleration, fDeceleration);
 
 }
 
@@ -187,17 +169,18 @@ void CPlayer::ShotBullet(float fTimeElapsed)
 	m_fBulletCoolTime -= fTimeElapsed;
 }
 
-
-
 void CPlayer::Animate(float fElapsedTime)
 {
-	CGameObject::Animate(fElapsedTime);
+	if (fElapsedTime > 0.0f)
+		SetPosition(XMFLOAT3(10, 10, 10));
+
 	ShotBullet(fElapsedTime);
 
-	for (int i = 0; i < MAXBULLETNUM; i++) {
+	for (int i = 0; i < BULLET_NUM; i++)
 		m_pBullets[i]->Animate(fElapsedTime);
-	}
 }
+
+
 
 void CPlayer::Render(HDC hDCFrameBuffer, CCamera *pCamera)
 {

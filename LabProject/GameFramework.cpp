@@ -49,10 +49,10 @@ void CGameFramework::BuildObjects()
 	m_pPlayer = new CPlayer();
 	m_pPlayer->SetPosition(0.0f, 0.0f, 0.0f);
 	m_pPlayer->SetMesh(pAirplaneMesh);
-	m_pPlayer->SetColor(RGB(0, 0, 255));
+	m_pPlayer->SetMovingDirection(XMFLOAT3(0.0f, 0.0f, 1.0f));
+	m_pPlayer->SetColor(RGB(0, 0,255));
 	m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));
 	m_pPlayer->SetMovingSpeed(PLAYER_SPEED);
-
 
 
 	CCubeMesh *pObjectCubeMesh = new CCubeMesh(1.0f, 1.0f, 1.0f);
@@ -66,11 +66,7 @@ void CGameFramework::BuildObjects()
 		m_pPlayer->m_pBullets[i]->SetRotationSpeed(600.0f);
 	}
 
-	CCubeMesh * pCubeMesh = new CCubeMesh(1.0f, 1.0f, 1.0f);
-
-	//m_pPlayer->m_pBullets[0]->SetPosition(0.0f, 0.0f, -100.0f);
-
-
+	
 	m_pScene = new CScene();
 	m_pScene->BuildObjects();
 
@@ -243,6 +239,7 @@ void CGameFramework::FrameAdvance()
 
 	//오브젝트들의 좌표를 이동시킵니다.
 	m_pScene->Animate(m_GameTimer.GetTimeElapsed());
+	m_pPlayer->Animate(m_GameTimer.GetTimeElapsed());
 
 	//화면을 초기화 시킵니다.
 	ClearFrameBuffer(RGB(255, 255, 255));

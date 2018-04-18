@@ -201,7 +201,6 @@ void CScene::CheckObjectByBulletCollisions()
 void CScene::Animate(float fElapsedTime)
 {
 	m_pWallsObject->Animate(fElapsedTime);
-	m_pPlayer->Animate(fElapsedTime);
 
 	//벽과 충돌하시
 	//if (m_pWallsObject->m_xmOOBB.Contains(XMLoadFloat3(&m_pPlayer->m_xmf3Position)) == DISJOINT) m_pWallsObject->SetPosition(m_pPlayer->m_xmf3Position);
