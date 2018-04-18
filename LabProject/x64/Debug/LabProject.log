@@ -1,12 +1,4 @@
-<<<<<<< HEAD
-﻿  Camera.cpp
-  GameFramework.cpp
-  GameObject.cpp
-  LabProject.cpp
-  Player.cpp
+﻿  GameFramework.cpp
   Scene.cpp
   코드를 생성하고 있습니다...
   LabProject.vcxproj -> C:\Users\wdw\Desktop\3d-assignment-1\x64\Debug\LabProject.exe
-=======
-﻿  LabProject.vcxproj -> C:\Users\원동욱\Desktop\3d-assignment-1\x64\Debug\LabProject.exe
->>>>>>> parent of e2fa26e... gameobject code arrangement

@@ -217,10 +217,10 @@ void CScene::Animate(float fElapsedTime)
 
 	ResponEnemy(fElapsedTime);
 
-	for (int i = 0; i < m_nObjects; i++) {
+	/*for (int i = 0; i < m_nObjects; i++) {
 		if (m_ppObjects[i]->m_bActive)
 			m_ppObjects[i]->SetMovingDirection(Vector3::Add(Vector3::ScalarProduct(m_ppObjects[i]->GetPosition(), -1), m_pPlayer->GetPosition()));
-	}
+	}*/
 }
 
 void CScene::Render(HDC hDCFrameBuffer, CCamera *pCamera)
