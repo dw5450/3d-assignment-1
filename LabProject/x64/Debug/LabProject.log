@@ -1,9 +1,26 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+﻿  GameObject.cpp
+c:\users\wdw\desktop\3d-assignment-1\labproject\gameobject.cpp(177): error C2059: 구문 오류: '<<'
+c:\users\wdw\desktop\3d-assignment-1\labproject\gameobject.cpp(183): error C2143: 구문 오류: ';'이(가) '{' 앞에 없습니다.
+c:\users\wdw\desktop\3d-assignment-1\labproject\gameobject.cpp(183): error C2447: '{': 함수 헤더가 없습니다. 이전 스타일의 형식 목록입니까?
+=======
+﻿  stdafx.cpp
+  Camera.cpp
+=======
 ﻿  Camera.cpp
+>>>>>>> parent of ef1886b... Revert "gameobject code arrangement"
   GameFramework.cpp
   GameObject.cpp
   LabProject.cpp
   ObjectManager.cpp
   Player.cpp
   Scene.cpp
+  Timer.cpp
   코드를 생성하고 있습니다...
-  LabProject.vcxproj -> C:\Users\원동욱\Desktop\3d-assignment-1\x64\Debug\LabProject.exe
+<<<<<<< HEAD
+  LabProject.vcxproj -> C:\Users\원동욱\Desktop\3d assignmet 1\x64\Debug\LabProject.exe
+>>>>>>> parent of cbe4d16... setAtive
+=======
+  LabProject.vcxproj -> C:\Users\wdw\Desktop\3d-assignment-1\x64\Debug\LabProject.exe
+>>>>>>> parent of ef1886b... Revert "gameobject code arrangement"

@@ -1,2 +1,6 @@
 #TargetFrameworkVersion=v4.0:PlatformToolSet=v141:EnableManagedIncrementalBuild=false:VCToolArchitecture=Native32Bit:WindowsTargetPlatformVersion=10.0.16299.0
-Debug|x64|C:\Users\원동욱\Desktop\3d-assignment-1\|
+<<<<<<< HEAD
+Debug|x64|C:\Users\wdw\Desktop\3d-assignment-1\|
+=======
+Debug|x64|C:\Users\원동욱\Desktop\3d assignmet 1\|
+>>>>>>> parent of cbe4d16... setAtive

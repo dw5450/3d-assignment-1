@@ -2,11 +2,24 @@
 
 #include "GameObject.h"
 
+<<<<<<< HEAD
+=======
+class CBullet : public CGameObject
+{
+public:
+	CBullet();
+	virtual ~CBullet();
+
+public:
+	float	fElapseTime = 0.0f;								//경과 시간.
+
+};
+>>>>>>> e4d70fa0deb8f466847733712755fec877793736
 
 
 class CPlayer : public CGameObject
 {
-public:
+public:	//생성 소멸자
 	CPlayer();
 	virtual ~CPlayer();
 
@@ -16,7 +29,6 @@ public:
 	XMFLOAT3					m_xmf3Look;
 
 	XMFLOAT3					m_xmf3CameraOffset;
-	XMFLOAT3					m_xmf3Velocity;
 	float						m_fFriction = 125.0f;
 
 	float           			m_fPitch = 0.0f;
@@ -29,18 +41,19 @@ public:
 	UINT						m_iCur_Bullet_num = MAXBULLETNUM;
 	bool						m_bReload = false;
 
+public: //설정
 	void SetPosition(float x, float y, float z);
-	void Move(DWORD dwDirection, float fDistance);
-	void Move(XMFLOAT3& xmf3Shift, bool bUpdateVelocity);
-	void Move(float x, float y, float z);
-	void Rotate(float fPitch = 0.0f, float fYaw = 0.0f, float fRoll = 0.0f);
+	void SetPosition(XMFLOAT3 &xmf);
 	void SetCameraOffset(XMFLOAT3& xmf3CameraOffset);
-	
-	void Update(float fTimeElapsed=0.016f);
 
-	void ShotBullet(float fTimeElapsed);
-
+public://행동
+	void Move(DWORD dwDirection, float fDistance);						//이동
+	void Move(XMFLOAT3& xmf3Shift);				//이동
+	void Move(float x, float y, float z);								//이동
+	void Rotate(float fPitch = 0.0f, float fYaw = 0.0f, float fRoll = 0.0f);	//회전
+	void Update(float fTimeElapsed=0.016f);								//업데이트
+	void ShotBullet(float fTimeElapsed);								//총을 쏘다
 	virtual void Animate(float fElapsedTime);
-	virtual void Render(HDC hDCFrameBuffer, CCamera *pCamera);
+	virtual void Render(HDC hDCFrameBuffer, CCamera *pCamera);			//화면에 그림
 };
 

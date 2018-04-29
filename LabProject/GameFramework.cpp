@@ -28,6 +28,64 @@ bool CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 	return(true);
 }
 
+<<<<<<< HEAD
+=======
+void CGameFramework::OnDestroy()
+{
+	ReleaseObjects();
+
+	if (m_hBitmapFrameBuffer) ::DeleteObject(m_hBitmapFrameBuffer);
+	if (m_hDCFrameBuffer) ::DeleteDC(m_hDCFrameBuffer);
+
+	if (m_hWnd) DestroyWindow(m_hWnd);
+}
+
+void CGameFramework::BuildObjects()
+{
+	CAirplaneMesh *pAirplaneMesh = new CAirplaneMesh(6.0f, 6.0f, 1.0f);
+	pAirplaneMesh->SetOOBB(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(3.0f, 3.0f, 0.5f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+
+	m_pPlayer = new CPlayer();
+	m_pPlayer->SetPosition(0.0f, 0.0f, 0.0f);
+	m_pPlayer->SetMesh(pAirplaneMesh);
+	m_pPlayer->SetMovingDirection(XMFLOAT3(0.0f, 0.0f, 1.0f));
+	m_pPlayer->SetColor(RGB(0, 0,255));
+	m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));
+	m_pPlayer->SetMovingSpeed(PLAYER_SPEED);
+
+
+	CCubeMesh *pObjectCubeMesh = new CCubeMesh(1.0f, 1.0f, 1.0f);
+	for (int i = 0; i < MAXBULLETNUM; i++) {
+		m_pPlayer->m_pBullets[i]->m_bActive = false;
+		m_pPlayer->m_pBullets[i] = new CBullet();
+		m_pPlayer->m_pBullets[i]->SetPosition(-1000.0f, -1000.0f, -1000.0f);
+		m_pPlayer->m_pBullets[i]->SetMesh(pObjectCubeMesh);
+		m_pPlayer->m_pBullets[i]->SetColor(RGB(255, 0, 0));
+		m_pPlayer->m_pBullets[i]->SetMovingSpeed(BULLETSPEED);
+		m_pPlayer->m_pBullets[i]->SetRotationSpeed(600.0f);
+	}
+
+	
+	m_pScene = new CScene();
+	m_pScene->BuildObjects();
+
+	m_pScene->m_pPlayer = m_pPlayer;
+}
+
+void CGameFramework::ReleaseObjects()
+{
+	if (m_pScene)
+	{
+		m_pScene->ReleaseObjects();
+		delete m_pScene;
+	}
+
+	if (m_pPlayer) delete m_pPlayer;
+}
+
+//랜더링
+
+>>>>>>> e4d70fa0deb8f466847733712755fec877793736
 void CGameFramework::BuildFrameBuffer()
 {
 	HDC hDC = ::GetDC(m_hWnd);
@@ -229,7 +287,11 @@ void CGameFramework::FrameAdvance()
 	//오브젝트들의 좌표를 이동시킵니다.
 	m_pPlayer->Animate(m_GameTimer.GetTimeElapsed());
 	m_pScene->Animate(m_GameTimer.GetTimeElapsed());
+<<<<<<< HEAD
 	
+=======
+	m_pPlayer->Animate(m_GameTimer.GetTimeElapsed());
+>>>>>>> e4d70fa0deb8f466847733712755fec877793736
 
 	//화면을 초기화 시킵니다.
 	ClearFrameBuffer(RGB(255, 255, 255));

@@ -174,11 +174,35 @@ XMVECTOR RandomUnitVectorOnSphere()
 XMFLOAT3 CExplosiveObject::m_pxmf3SphereVectors[EXPLOSION_DEBRISES];
 CMesh *CExplosiveObject::m_pExplosionMesh = NULL;
 
+<<<<<<< HEAD
+CExplosiveObject::CExplosiveObject()
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+
+//积己, 家戈
+=======
+>>>>>>> parent of e2fa26e... gameobject code arrangement
 CExplosiveObject::CExplosiveObject()
 {
 }
 
 CExplosiveObject::~CExplosiveObject()
+=======
+
+void CExplosiveObject::PrepareExplosion()
+>>>>>>> e4d70fa0deb8f466847733712755fec877793736
+{
+}
+
+<<<<<<< HEAD
+CExplosiveObject::~CExplosiveObject()
+=======
+
+//积己, 家戈
+CExplosiveObject::CExplosiveObject()
+>>>>>>> parent of ef1886b... Revert "gameobject code arrangement"
+>>>>>>> e4d70fa0deb8f466847733712755fec877793736
 {
 }
 
@@ -189,6 +213,8 @@ void CExplosiveObject::PrepareExplosion()
 	m_pExplosionMesh = new CCubeMesh(0.5f, 0.5f, 0.5f);
 }
 
+
+//青悼 窃荐
 void CExplosiveObject::Animate(float fElapsedTime)
 {
 	if (m_bBlowingUp)

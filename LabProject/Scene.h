@@ -5,9 +5,11 @@
 
 class CScene
 {
-public:
+public:	//생성 소멸자
 	CScene();
 	virtual ~CScene();
+	virtual void BuildObjects();
+	virtual void ReleaseObjects();
 
 	CPlayer										*m_pPlayer = NULL;
 
@@ -16,10 +18,7 @@ public:
 
 	CWallsObject				*m_pWallsObject = NULL;
 
-
-	virtual void BuildObjects();
-	virtual void ReleaseObjects();
-
+public: //행동 함수
 	virtual void CheckObjectByObjectCollisions();
 	virtual void CheckObjectByWallCollisions();
 	virtual void CheckPlayerByWallCollisions();
