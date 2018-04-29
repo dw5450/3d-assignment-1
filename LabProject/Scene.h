@@ -9,11 +9,9 @@ public:
 	CScene();
 	virtual ~CScene();
 
-	CPlayer						*m_pPlayer = NULL;
+	CPlayer										*m_pPlayer = NULL;
 
-	int							m_nObjects = 0;
-	CGameObject					**m_ppObjects = NULL;
-	float						m_iObjectResponTime = 0;
+	float										m_iObjectResponTime = 0;
 
 
 	CWallsObject				*m_pWallsObject = NULL;
@@ -24,6 +22,7 @@ public:
 
 	virtual void CheckObjectByObjectCollisions();
 	virtual void CheckObjectByWallCollisions();
+	virtual void CheckPlayerByWallCollisions();
 	virtual void CheckObjectByBulletCollisions();
 
 	virtual void Animate(float fElapsedTime);

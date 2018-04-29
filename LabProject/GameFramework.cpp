@@ -5,9 +5,6 @@
 #include "stdafx.h"
 #include "GameFramework.h"
 
-
-//생성 소멸
-
 CGameFramework::CGameFramework()
 {
 	_tcscpy_s(m_pszFrameRate, _T("LabProject ("));
@@ -30,65 +27,6 @@ bool CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 
 	return(true);
 }
-
-void CGameFramework::OnDestroy()
-{
-	ReleaseObjects();
-
-	if (m_hBitmapFrameBuffer) ::DeleteObject(m_hBitmapFrameBuffer);
-	if (m_hDCFrameBuffer) ::DeleteDC(m_hDCFrameBuffer);
-
-	if (m_hWnd) DestroyWindow(m_hWnd);
-}
-
-void CGameFramework::BuildObjects()
-{
-	CAirplaneMesh *pAirplaneMesh = new CAirplaneMesh(6.0f, 6.0f, 1.0f);
-	pAirplaneMesh->SetOOBB(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(3.0f, 3.0f, 0.5f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
-
-	m_pPlayer = new CPlayer();
-	m_pPlayer->SetPosition(0.0f, 0.0f, -30.0f);
-	m_pPlayer->SetMesh(pAirplaneMesh);
-	m_pPlayer->SetColor(RGB(0, 0, 255));
-	m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));
-	m_pPlayer->SetMovingSpeed(PLAYER_SPEED);
-
-
-
-	CCubeMesh *pObjectCubeMesh = new CCubeMesh(1.0f, 1.0f, 1.0f);
-	for (int i = 0; i < MAXBULLETNUM; i++) {
-		m_pPlayer->m_pBullets[i]->m_bActive = false;
-		m_pPlayer->m_pBullets[i] = new CBullet();
-		m_pPlayer->m_pBullets[i]->SetPosition(-1000.0f, -1000.0f, -1000.0f);
-		m_pPlayer->m_pBullets[i]->SetMesh(pObjectCubeMesh);
-		m_pPlayer->m_pBullets[i]->SetColor(RGB(255, 0, 0));
-		m_pPlayer->m_pBullets[i]->SetMovingSpeed(BULLETSPEED);
-		m_pPlayer->m_pBullets[i]->SetRotationSpeed(600.0f);
-	}
-
-	CCubeMesh * pCubeMesh = new CCubeMesh(1.0f, 1.0f, 1.0f);
-
-	//m_pPlayer->m_pBullets[0]->SetPosition(0.0f, 0.0f, -100.0f);
-
-
-	m_pScene = new CScene();
-	m_pScene->BuildObjects();
-
-	m_pScene->m_pPlayer = m_pPlayer;
-}
-
-void CGameFramework::ReleaseObjects()
-{
-	if (m_pScene)
-	{
-		m_pScene->ReleaseObjects();
-		delete m_pScene;
-	}
-
-	if (m_pPlayer) delete m_pPlayer;
-}
-
-//랜더링
 
 void CGameFramework::BuildFrameBuffer()
 {
@@ -113,8 +51,6 @@ void CGameFramework::ClearFrameBuffer(DWORD dwColor)
 	::SelectObject(m_hDCFrameBuffer, hOldBrush);
 	::DeleteObject(hBrush);
 }
-
-//입력
 
 void CGameFramework::PresentFrameBuffer()
 {
@@ -194,6 +130,47 @@ LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMess
 	return(0);
 }
 
+
+//오브젝트들을 빌드합니다.
+void CGameFramework::BuildObjects()
+{
+	CAirplaneMesh *pAirplaneMesh = new CAirplaneMesh(6.0f, 6.0f, 1.0f);
+	pAirplaneMesh->SetOOBB(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(3.0f, 3.0f, 0.5f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+
+	m_pPlayer = new CPlayer();
+	m_pPlayer->SetPosition(0.0f, 0.0f, 0.0f);
+	m_pPlayer->SetMesh(pAirplaneMesh);
+	m_pPlayer->SetColor(RGB(0, 0, 255));
+	m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));
+	m_pPlayer->SetMovingDirection(XMFLOAT3(0.0f, 0.0f, 0.0f));
+	m_pPlayer->SetMovingSpeed(PLAYER_SPEED);
+
+	m_pScene = new CScene();
+	m_pScene->m_pPlayer = m_pPlayer;
+	m_pScene->BuildObjects();
+}
+
+void CGameFramework::ReleaseObjects()
+{
+	if (m_pScene)
+	{
+		m_pScene->ReleaseObjects();
+		delete m_pScene;
+	}
+
+	if (m_pPlayer) delete m_pPlayer;
+}
+
+void CGameFramework::OnDestroy()
+{
+	ReleaseObjects();
+
+	if (m_hBitmapFrameBuffer) ::DeleteObject(m_hBitmapFrameBuffer);
+	if (m_hDCFrameBuffer) ::DeleteDC(m_hDCFrameBuffer);
+
+	if (m_hWnd) DestroyWindow(m_hWnd);
+}
+
 void CGameFramework::ProcessInput()
 {
 	static UCHAR pKeyBuffer[256];
@@ -204,8 +181,16 @@ void CGameFramework::ProcessInput()
 		if (pKeyBuffer['S'] & 0xF0) dwDirection |= DIR_BACKWARD;
 		if (pKeyBuffer['A'] & 0xF0) dwDirection |= DIR_LEFT;
 		if (pKeyBuffer['D'] & 0xF0) dwDirection |= DIR_RIGHT;
-		if (pKeyBuffer[VK_CONTROL] & 0xF0) m_pPlayer->m_bShotedBullet = true;
-		//if (pKeyBuffer['E'] & 0xF0) dwDirection |= DIR_DOWN;
+		if (pKeyBuffer[VK_CONTROL] & 0xF0) {
+			if (m_pScene->m_pPlayer->m_iCur_Bullet_num > 0) {
+				m_pScene->m_pPlayer->m_iCur_Bullet_num -= 1;
+		
+			}
+			else
+				m_pScene->m_pPlayer->m_bReload = true;
+
+		}
+	
 	}
 	float cxDelta = 0.0f, cyDelta = 0.0f;
 	POINT ptCursorPos;
@@ -226,12 +211,12 @@ void CGameFramework::ProcessInput()
 			else
 				m_pPlayer->Rotate(cyDelta, cxDelta, 0.0f);
 		}
-		if (dwDirection) m_pPlayer->Move(dwDirection, m_GameTimer.GetTimeElapsed());				//속도가 디폴드 설정 되어 있음
+		if (dwDirection){
+			m_pPlayer->Move(dwDirection, m_GameTimer.GetTimeElapsed());
+			}//속도가 디폴드 설정 되어 있음
 	}
 	m_pPlayer->Update(m_GameTimer.GetTimeElapsed());
 }
-
-//변경점 적용
 
 void CGameFramework::FrameAdvance()
 {
@@ -242,13 +227,16 @@ void CGameFramework::FrameAdvance()
 	ProcessInput();							//키보드나 마우스의 입력을 받습니다.
 
 	//오브젝트들의 좌표를 이동시킵니다.
+	m_pPlayer->Animate(m_GameTimer.GetTimeElapsed());
 	m_pScene->Animate(m_GameTimer.GetTimeElapsed());
+	
 
 	//화면을 초기화 시킵니다.
 	ClearFrameBuffer(RGB(255, 255, 255));
 
 	//화면에 오브젝트들을 그립니다.
 	m_pScene->Render(m_hDCFrameBuffer, m_pPlayer->m_pCamera);
+	m_pPlayer->Render(m_hDCFrameBuffer, m_pPlayer->m_pCamera);
 
 	PresentFrameBuffer();				//버퍼링을 적용 시킵니다.
 

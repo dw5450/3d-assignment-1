@@ -2,7 +2,7 @@
   GameFramework.cpp
   GameObject.cpp
   LabProject.cpp
-  Mesh.cpp
+  ObjectManager.cpp
   Player.cpp
   Scene.cpp
   코드를 생성하고 있습니다...

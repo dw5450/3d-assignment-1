@@ -33,6 +33,8 @@
 #include <memory.h>
 #include <tchar.h>
 #include <math.h>
+#include <list>
+#include <memory>
 #include <random>
 
 #include <d3d12.h>
@@ -60,8 +62,7 @@ using namespace DirectX::PackedVector;
 
 #define RANDOM_COLOR			(0xFF000000 | ((rand() * 0xFFFFFF) / RAND_MAX))
 
-#define EXPLOSION_DEBRISES		120
-
+#define EXPLOSION_DEBRISES		100
 
 #define BULLET_NUM				20
 
@@ -74,7 +75,9 @@ using namespace DirectX::PackedVector;
 
 #define OBJECTRESPONTIME			1.0f
 
+
 #define WALL_HALF_SIZE				45.0f
+
 
 namespace Vector3
 {

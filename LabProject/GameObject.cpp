@@ -3,8 +3,6 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-
-//생성 소멸자
 CGameObject::CGameObject() 
 { 
 	m_pMesh = NULL; 
@@ -31,8 +29,6 @@ CGameObject::~CGameObject(void)
 	if (m_pMesh) m_pMesh->Release();
 }
 
-
-//설정 함수
 void CGameObject::SetPosition(float x, float y, float z) 
 {
 	m_xmf4x4World._41 = x; 
@@ -47,38 +43,32 @@ void CGameObject::SetPosition(XMFLOAT3& xmf3Position)
 	m_xmf4x4World._43 = xmf3Position.z; 
 }
 
-
-//참조 함수
-XMFLOAT3 CGameObject::GetPosition() const 
+XMFLOAT3 CGameObject::GetPosition() 
 { 
 	return(XMFLOAT3(m_xmf4x4World._41, m_xmf4x4World._42, m_xmf4x4World._43)); 
 }
 
-XMFLOAT3 CGameObject::GetLook() const
+XMFLOAT3 CGameObject::GetLook() 
 { 	
 	XMFLOAT3 xmf3LookAt(m_xmf4x4World._31, m_xmf4x4World._32, m_xmf4x4World._33);
 	xmf3LookAt = Vector3::Normalize(xmf3LookAt);
 	return(xmf3LookAt);
 }
 
-XMFLOAT3 CGameObject::GetUp() const
+XMFLOAT3 CGameObject::GetUp() 
 { 	
 	XMFLOAT3 xmf3Up(m_xmf4x4World._21, m_xmf4x4World._22, m_xmf4x4World._23);
 	xmf3Up = Vector3::Normalize(xmf3Up);
 	return(xmf3Up);
 }
 
-XMFLOAT3 CGameObject::GetRight() const 
+XMFLOAT3 CGameObject::GetRight()
 { 	
 	XMFLOAT3 xmf3Right(m_xmf4x4World._11, m_xmf4x4World._12, m_xmf4x4World._13);
 	xmf3Right = Vector3::Normalize(xmf3Right);
 	return(xmf3Right);
 }
 
-
-//행동 함수
-
-//이동
 void CGameObject::MoveStrafe(float fDistance)
 {
 	XMFLOAT3 xmf3Position = GetPosition();
@@ -103,13 +93,6 @@ void CGameObject::MoveForward(float fDistance)
 	CGameObject::SetPosition(xmf3Position);
 }
 
-void CGameObject::Move(XMFLOAT3& vDirection, float fSpeed)
-{
-	SetPosition(m_xmf4x4World._41 + vDirection.x * fSpeed, m_xmf4x4World._42 + vDirection.y * fSpeed, m_xmf4x4World._43 + vDirection.z * fSpeed);
-}
-
-
-//회전
 void CGameObject::Rotate(float fPitch, float fYaw, float fRoll)
 {
 	XMFLOAT4X4 mtxRotate = Matrix4x4::RotationYawPitchRoll(fYaw, fPitch, fRoll);
@@ -122,7 +105,11 @@ void CGameObject::Rotate(XMFLOAT3& xmf3RotationAxis, float fAngle)
 	m_xmf4x4World = Matrix4x4::Multiply(mtxRotate, m_xmf4x4World);
 }
 
-//애니메이션
+void CGameObject::Move(XMFLOAT3& vDirection, float fSpeed)
+{
+	SetPosition(m_xmf4x4World._41 + vDirection.x * fSpeed, m_xmf4x4World._42 + vDirection.y * fSpeed, m_xmf4x4World._43 + vDirection.z * fSpeed);
+}
+
 void CGameObject::Animate(float fElapsedTime)
 {
 	if (m_bActive) {
@@ -137,7 +124,6 @@ void CGameObject::Animate(float fElapsedTime)
 	}
 }
 
-//랜더링
 void CGameObject::Render(HDC hDCFrameBuffer, CCamera *pCamera)
 {
 	if (m_pMesh && m_bActive)
@@ -150,15 +136,22 @@ void CGameObject::Render(HDC hDCFrameBuffer, CCamera *pCamera)
 	}
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+CWallsObject::CWallsObject()
+{
+}
 
-
-
+CWallsObject::~CWallsObject()
+{
+}
 
 
 ////////////////////////////////////////EXPLOSION//////////////////////////////////////////////////
+//
 
-//전역함수
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 inline float RandF(float fMin, float fMax)
 {
 	return(fMin + ((float)rand() / (float)RAND_MAX) * (fMax - fMin));
@@ -176,17 +169,10 @@ XMVECTOR RandomUnitVectorOnSphere()
 	}
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 XMFLOAT3 CExplosiveObject::m_pxmf3SphereVectors[EXPLOSION_DEBRISES];
 CMesh *CExplosiveObject::m_pExplosionMesh = NULL;
-
-
-void CExplosiveObject::PrepareExplosion()
-{
-	for (int i = 0; i < EXPLOSION_DEBRISES; i++) XMStoreFloat3(&m_pxmf3SphereVectors[i], ::RandomUnitVectorOnSphere());
-
-	m_pExplosionMesh = new CCubeMesh(0.5f, 0.5f, 0.5f);
-}
 
 CExplosiveObject::CExplosiveObject()
 {
@@ -194,6 +180,13 @@ CExplosiveObject::CExplosiveObject()
 
 CExplosiveObject::~CExplosiveObject()
 {
+}
+
+void CExplosiveObject::PrepareExplosion()
+{
+	for (int i = 0; i < EXPLOSION_DEBRISES; i++) XMStoreFloat3(&m_pxmf3SphereVectors[i], ::RandomUnitVectorOnSphere());
+
+	m_pExplosionMesh = new CCubeMesh(0.5f, 0.5f, 0.5f);
 }
 
 void CExplosiveObject::Animate(float fElapsedTime)
@@ -248,13 +241,27 @@ void CExplosiveObject::Render(HDC hDCFrameBuffer, CCamera *pCamera)
 	}
 }
 
+void CEnermy::TracePlayer(XMFLOAT3 & playerPosition)
+{
+	XMVECTOR pPosition = XMLoadFloat3(&playerPosition);
+	XMVECTOR ePosition = XMLoadFloat3(&GetPosition());
+	XMFLOAT3 moveDirection;
+	XMStoreFloat3(&moveDirection, XMVectorSubtract(pPosition, ePosition));
+	SetMovingDirection(moveDirection);
+}
 
+
+
+
+////////////////////////////////////////////////////////////////////////////////////
+CBullet::CBullet()
+{
+
+}
+
+CBullet::~CBullet()
+{
+
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-CWallsObject::CWallsObject()
-{
-}
-
-CWallsObject::~CWallsObject()
-{
-}
